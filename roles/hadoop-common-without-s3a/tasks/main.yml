@@ -1,0 +1,58 @@
+---
+# This playbook installs and configures Apache Hadoop
+
+- name: Create hadoop directories
+  file: path={{ item }} state=directory mode=0755
+  with_items:
+  - /hadoop/hdfs/nn
+  - /hadoop/hdfs/dn
+  - /hadoop/yarn/nm
+
+- unarchive:
+    src: "{{ tarball_prefix }}/{{ hadoop_tarball }}"
+    dest: /hadoop
+    remote_src: True
+    extra_opts: "--strip-components=1"
+    creates: /hadoop/LICENSE.txt
+
+- name: Calculate memory settings
+  shell: /usr/bin/egrep DirectMap /proc/meminfo|awk '{total+=$2}END{print total/1024}'
+  register: memtotal
+
+- name: Configure profile
+  template: src=profile.j2 dest=/etc/profile.d/hadoop.sh
+  tags: hadoop
+
+- name: Configure security limits
+  template: src=limits.conf.j2 dest=/etc/security/limits.conf
+  tags: hadoop
+
+- name: Configure core site file
+  template: src=core-site.j2 dest=/hadoop/etc/hadoop/core-site.xml
+  tags: hadoop
+
+- name: Configure hdfs site file
+  template: src=hdfs-site.j2 dest=/hadoop/etc/hadoop/hdfs-site.xml
+  tags: hadoop
+  notify:
+  - format namenode
+  - stop namenode
+  - start namenode
+  - stop datanode
+  - start datanode
+
+- name: Configure yarn site file
+  template: src=yarn-site.j2 dest=/hadoop/etc/hadoop/yarn-site.xml
+  tags: hadoop
+  notify:
+  - stop resourcemanager
+  - start resourcemanager
+  - stop nodemanager
+  - start nodemanager
+
+- name: Configure mapred site file
+  template: src=mapred-site.j2 dest=/hadoop/etc/hadoop/mapred-site.xml
+  tags: hadoop
+  notify:
+  - stop historyserver
+  - start historyserver

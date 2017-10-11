@@ -1,5 +1,6 @@
 ---
 # This playbook deploys the whole application stack in this site.
+# Intended for s3a support
 
 - name: apply common configuration to all nodes
   hosts: all:!localhost
@@ -9,6 +10,7 @@
   vars_files:
     - "vars/{{ deploy_method }}.yml"
     - "vars/resources.yml"
+    - "vars/s3a.yml"
   roles:
     - { role: ansiblebit.oracle-java,
       oracle_java_set_as_default: yes,
@@ -17,8 +19,9 @@
       oracle_java_version_build: 11,
       oracle_java_rpm_url: "http://download.oracle.com/otn-pub/java/jdk/{{ oracle_java_version }}u{{ oracle_java_version_update }}-b{{ oracle_java_version_build }}/d54c1d3a095b4ff2b6607d096fa80163/{{ oracle_java_rpm_filename }}"}
     - common
-    - hadoop-common
-    - hive
+    - hadoop-common-with-s3a
+    - hive-with-s3a
     - spark
+#    - presto-with-s3a
 #    - maven
 #    - hive-testbench

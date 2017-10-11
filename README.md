@@ -76,10 +76,15 @@ playbook repository.
 You should change the deploy_method variable in the ``group_vars/all`` file to
 ``bare``.
 
-Once you have added your hosts to the inventory file, you can run the site
-play:
+You can choose two different mode in this deployment, with s3a support or without s3a support. You should first add your hosts to the inventory file, you can run one site play :
 
-```ansible-playbook -i hosts site.yml```
+```ansible-playbook -i hosts site-s3a.yml```
+
+for deployment with s3a support, and run the other site play:
+
+```ansible-playbook -i hosts site-without-s3a.yml```
+
+for deployment without s3a support.
 
 When it finishes, you should have a complete data lab ready to go!
 
@@ -104,3 +109,14 @@ yarn, or processing queries on presto workers.
 * hdfs datanode
 * kafka broker
 * presto worker
+
+# FAQ
+* If you have problems downloading packages, you can download them manually and place them at a direction which you need to specify as ```tarball_prefix``` in ```./var/resources.yml```
+
+* Please specify ```hive metastore warehouse``` and ```hive scratch direction``` in ```./group_vars/all``` 
+
+* If you encounter build failure with /hadoop-home/hive-testbench/tpcds-build.sh and the error is due to connection time out to repo.maven.apache.org, please add one proxy server which can access that url in ./maven/conf/settings.conf, proxy section.
+
+* Hive-testbench
+Please first run ```tpcds-build.sh``` , then ```tpcds-setup.sh``` to generate data, and ```tpcds-run.sh``` for benchmarking. Please check the details in ```/hadoop-home/hive-testbench/README.md```.
+

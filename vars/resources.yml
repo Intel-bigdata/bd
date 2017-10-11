@@ -1,11 +1,14 @@
 ---
 tarball_prefix: 'https://bd-dist.s3.amazonaws.com'
+#if this url doesn't work, you can download these packages manually, and specify their location using tarball_prefix, that's feasible.
+#For example,
+tarball_prefix: '/home/Tarball'
 
 hadoop_tarball: 'hadoop-2.8.1.tar.gz'
-hive_tarball: 'apache-hive-2.2.0-bin.tar.gz'
+hive_tarball: 'apache-hive-2.1.1-bin.tar.gz'
 spark_tarball: 'spark-2.2.0-bin-without-hadoop-with-hive.tgz'
 
-presto_tarball: 'presto-server-0.170.tar.gz'
-presto_cli: 'presto-cli-0.170-executable.jar'
+presto_tarball: 'presto-server-0.177.tar.gz'
+presto_cli: 'presto-cli-0.177-executable.jar'
 
 maven_tarball: 'apache-maven-3.5.0-bin.tar.gz'

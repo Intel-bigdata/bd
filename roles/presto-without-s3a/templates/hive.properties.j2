@@ -1,0 +1,6 @@
+connector.name=hive-hadoop2
+hive.metastore.uri=thrift://{{ hostvars[groups[[master_group][0]][0]]['ansible_eth0']['ipv4']['address'] }}:9083
+hive.config.resources=/hadoop/etc/hadoop/core-site.xml,/hadoop/etc/hadoop/hdfs-site.xml
+hive.max-split-iterator-threads=100
+hive.metastore-refresh-interval=10m
+hive.metastore-cache-ttl=60m
